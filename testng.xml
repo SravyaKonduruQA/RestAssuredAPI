@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="RestAssuredAPI" verbose="1" parallel="tests" thread-count="2">
+
+    <!-- Test block -->
+    <test name="PokemonAPITests">
+        <!-- Optional parameters -->
+        <parameter name="baseUri" value="https://pokeapi.co/api/v2"/>
+
+        <classes>
+            <!-- Add your test class here -->
+            <class name="PokemonGengar"/>
+        </classes>
+    </test>
+</suite>
