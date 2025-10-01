@@ -6,14 +6,11 @@ import java.util.Arrays;
 import java.util.List;
 public class ConfigReader {
 
-
-
-
-        private static Properties prop;
+    private static Properties prop;
 
         static {
             try {
-                FileInputStream fis = new FileInputStream("target/Stage.properties");
+                FileInputStream fis = new FileInputStream("src/test/resources/Stage.properties");
                 prop = new Properties();
                 prop.load(fis);
             } catch (IOException e) {

@@ -4,6 +4,7 @@ import SpecFactory.ResponseSpecFactory;
 import Utils.ConfigReader;
 import Utils.EndPointProvider;
 import Utils.POJO.PokemonPOJO;
+import Utils.TestDataUtil;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.slf4j.Logger;
@@ -21,51 +22,47 @@ public class PokemonGengar {
 
     private static final Logger log = LoggerFactory.getLogger(PokemonGengar.class);
 
-    @Test(enabled = false)
+    @Test(enabled = true)
         public void getGengarDetailsDynamic() {
-
-            String pokemonName = "gengar";
-            String baseUri = "https://pokeapi.co/api/v2";
+        RestAssured.baseURI = TestDataUtil.getBaseUrl();
 
             // Example headers or query params (null if not needed)
             Map<String, String> headers = new HashMap<>();
-            headers.put("Content-Type", "application/json");
+            headers.put("Content-Type", TestDataUtil.getContentType());
          Map<String, String> cookies= new HashMap<>();
-         cookies.put("sessionId", "223343");
-         cookies.put("user", "sravya34");
+         cookies.put("sessionId", TestDataUtil.getSessionId());
+         cookies.put("user", TestDataUtil.getUserId());
             Map<String, String> queryParams = null;
 
             given()
-                    .spec(RequestSpecFactory.createRequestSpec(baseUri, headers,cookies, queryParams))
+                    .spec(RequestSpecFactory.createRequestSpec(TestDataUtil.getBaseUrl(), headers,cookies, queryParams))
                     .when()
-                    .get("/pokemon/{name}", pokemonName)
+                    .get("/pokemon/{name}", TestDataUtil.getPokemonName())
                     .then()
                     .spec(ResponseSpecFactory.createResponseSpec(200))
-                    .body("name", equalToIgnoringCase(pokemonName))
+                    .body("name", equalToIgnoringCase(TestDataUtil.getPokemonName()))
                     .body("abilities.size()", greaterThan(0));
-                    //.log().all();
-        }
-        @Test(enabled = false)
-    public void getGengarResponseCookies() {
 
-        String pokemonName = "gengar";
-        String baseUri = "https://pokeapi.co/api/v2";
+        }
+        @Test(enabled = true)
+    public void getGengarResponseCookies() {
 
         // Example headers or query params (null if not needed)
         Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
+        System.out.println(TestDataUtil.getSessionId() + TestDataUtil.getBaseUrl());
+        headers.put("Content-Type", TestDataUtil.getContentType());
         Map<String, String> cookies= new HashMap<>();
-        cookies.put("sessionId", "223343");
-        cookies.put("user", "sravya34");
+        cookies.put("sessionId", TestDataUtil.getSessionId());
+        cookies.put("user", TestDataUtil.getUserId());
         Map<String, String> queryParams = null;
 System.out.println(cookies);
 Response res= RestAssured.given()
-                .spec(RequestSpecFactory.createRequestSpec(baseUri, headers, cookies, queryParams))
+                .spec(RequestSpecFactory.createRequestSpec(TestDataUtil.getBaseUrl(), headers, cookies, queryParams))
                 .when()
-                .get("/pokemon/{name}", pokemonName)
+                .get("/pokemon/{name}", TestDataUtil.getPokemonName())
                 .then()
                 .spec(ResponseSpecFactory.createResponseSpec(200)).extract().response();
-        //.log().all();
+
 String rescookie= res.getCookie("sessionId");
 System.out.println("cookie:" +rescookie);
     }
@@ -81,11 +78,9 @@ System.out.println("cookie:" +rescookie);
     }
     @Test(dataProvider = "pokemonNames", dataProviderClass = PokemonGengar.class)
     public void getPokemonDetails(String pokemonName) {
-        String baseUri = ConfigReader.getProperty(ConfigReader.getProperty("env") + ".baseUri.pokemon");
-        System.out.println(baseUri);
 
         Response response = given()
-                .spec(RequestSpecFactory.createRequestSpec(baseUri, null,null,null))
+                .spec(RequestSpecFactory.createRequestSpec(TestDataUtil.getBaseUrl(), null,null,null))
                 .when()
                 .get(EndPointProvider.getPokemonEndpoint(pokemonName))
                 .then()
