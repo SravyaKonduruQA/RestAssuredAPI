@@ -1,0 +1,13 @@
+
+  {
+    "baseUrl":"https://pokeapi.co/api/v2",
+    "user": {
+      "userId":"SravyaK",
+      "sessionId":22233,
+      "contentType":"application/json",
+      "pokemonName":"gengar"
+    },
+    "endpoints": {
+      "getPokemon": "/pokemon/{name}"
+    }
+  }
